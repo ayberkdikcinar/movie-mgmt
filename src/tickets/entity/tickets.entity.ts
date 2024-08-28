@@ -1,13 +1,18 @@
-import { UserEntity } from 'src/auth/entity/user.entity';
+import { UserEntity } from 'src/users/entity/user.entity';
 import { SessionEntity } from 'src/sessions/entity/sessions.entity';
 import { TypeORMBaseEntity } from 'src/types/base.entity';
-import { Entity, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-@Entity('ticket')
+@Entity('tickets')
 export class TicketEntity extends TypeORMBaseEntity {
-  @ManyToOne(() => UserEntity, (user) => user.tickets, { onDelete: 'CASCADE' })
-  user: UserEntity;
+  @Column()
+  user_id: string;
 
-  @OneToOne(() => SessionEntity, (session) => session.tickets)
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE', lazy: true })
+  @JoinColumn({ name: 'user_id' })
+  user: Promise<UserEntity>;
+
+  @ManyToOne(() => SessionEntity, (session) => session.tickets)
+  @JoinColumn({ name: 'session_id' })
   session: SessionEntity;
 }

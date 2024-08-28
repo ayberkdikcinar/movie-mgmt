@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { initPostgresConfig } from './config/postgres-config';
-import { UserEntity } from './auth/entity/user.entity';
+import { UserEntity } from './users/entity/user.entity';
 import { MovieEntity } from './movies/entity/movies.entity';
 import { SessionEntity } from './sessions/entity/sessions.entity';
 import { TicketEntity } from './tickets/entity/tickets.entity';
@@ -16,7 +16,10 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
+    ConfigModule.forRoot({
+      envFilePath: `.env`,
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot(
       initPostgresConfig([
         UserEntity,
@@ -25,9 +28,9 @@ import { UsersModule } from './users/users.module';
         TicketEntity,
       ]),
     ),
+    AuthModule,
     MoviesModule,
     TicketsModule,
-    AuthModule,
     SessionsModule,
     UsersModule,
   ],

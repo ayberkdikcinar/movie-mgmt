@@ -2,9 +2,9 @@ import { TicketEntity } from 'src/tickets/entity/tickets.entity';
 import { TypeORMBaseEntity } from 'src/types/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '../enum/role';
+import { Role } from '../types/enum/role';
 
-@Entity('user')
+@Entity('users')
 export class UserEntity extends TypeORMBaseEntity {
   @Column({ unique: true })
   username: string;

@@ -17,7 +17,9 @@ export class CreateSessionDto {
   date: string;
 
   @IsEnum(TimeSlot, {
-    message: 'Invalid time slot. Please choose a valid time slot.',
+    message: `Invalid time slot. Please choose a valid time slot. ${Object.values(
+      TimeSlot,
+    ).map((val) => '[' + val + ']')}`,
   })
   timeSlot: TimeSlot;
 
