@@ -6,6 +6,14 @@ import { Public } from './constants/public';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
 import { JWTUserPayload } from './types/jwt-user-payload';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -16,6 +24,9 @@ export class AuthController {
     return await this.authService.signup(createUserDto);
   }
 
+  @ApiOperation({ summary: 'Sign in a user' })
+  @ApiResponse({ status: 200, description: 'returns access token!' })
+  @ApiResponse({ status: 400, description: 'Check your credentials!' })
   @Public()
   @Post('signin')
   async signin(@Body() signinUserDto: SigninUserDto) {
@@ -29,6 +40,8 @@ export class AuthController {
     return await this.authService.getUsers();
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'returns the signed in user' })
   @Get('me')
   async getUser(@Req() req: Request) {
     const user = req.user as JWTUserPayload;

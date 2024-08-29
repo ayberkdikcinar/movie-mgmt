@@ -4,6 +4,9 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
 import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+@ApiTags('tickets')
+@ApiBearerAuth()
 @Controller('tickets')
 export class TicketsController {
   constructor(private readonly ticketService: TicketsService) {}

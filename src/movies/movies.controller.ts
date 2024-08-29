@@ -17,7 +17,10 @@ import { Role } from 'src/users/types/enum/role';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
 import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('movies')
+@ApiBearerAuth()
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly movieService: MoviesService) {}
@@ -27,18 +30,21 @@ export class MoviesController {
     return await this.movieService.getMovies(movieQueryOptions);
   }
 
+  @ApiOperation({ summary: 'Protected route for managers only' })
   @Post()
   @Roles(Role.manager)
   async createMovie(@Body() createMovieDto: CreateMovieDto) {
     return await this.movieService.createMovie(createMovieDto);
   }
 
+  @ApiOperation({ summary: 'Protected route for managers only' })
   @Patch()
   @Roles(Role.manager)
   async updateMovie(@Body() updateMovieDto: UpdateMovieDto) {
     return await this.movieService.updateMovie(updateMovieDto);
   }
 
+  @ApiOperation({ summary: 'Protected route for managers only' })
   @Delete(':id')
   @Roles(Role.manager)
   async deleteMovie(@Param('id') id: string) {

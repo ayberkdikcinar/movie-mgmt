@@ -1,11 +1,18 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 
 export class CreateMovieDto {
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   name: string;
 
-  //maybe put some options like 18, 7, 15, 12?
+  @ApiProperty({
+    maximum: 18,
+    minimum: 7,
+  })
   @IsInt()
+  @Min(7)
+  @Max(18)
   ageRestriction: number;
 }
