@@ -6,7 +6,7 @@ import { TicketEntity } from 'src/tickets/entity/tickets.entity';
 
 @Entity('sessions')
 export class SessionEntity extends TypeORMBaseEntity {
-  @Column({ nullable: false })
+  @Column({ type: 'date', nullable: false })
   date: Date;
 
   @Column({
@@ -18,9 +18,6 @@ export class SessionEntity extends TypeORMBaseEntity {
 
   @Column()
   roomNumber: number;
-
-  @Column()
-  movie_id: string;
 
   @ManyToOne(() => MovieEntity, (movie) => movie.sessions, {
     onDelete: 'CASCADE',

@@ -10,7 +10,6 @@ import { MovieEntity } from './entity/movies.entity';
 import { generateUUID } from 'src/utils/gen-id';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieErrorMessage } from './types/enums/movie-error-message';
-import { CreateSessionDto } from 'src/sessions/dto/create-session.dto';
 import { MovieQueryOptions } from './types/query/movie-query-options';
 @Injectable()
 export class MoviesService {
@@ -30,6 +29,11 @@ export class MoviesService {
       take: pageSize,
     });
   }
+
+  async getMovieById(id: string): Promise<MovieEntity> {
+    return await this.moviesRepository.findOneBy({ id });
+  }
+
   async createMovie(movie: CreateMovieDto): Promise<MovieEntity> {
     const { ageRestriction, name } = movie;
     const movieObj = this.moviesRepository.create({
