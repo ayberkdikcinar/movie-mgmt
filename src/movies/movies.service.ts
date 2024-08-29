@@ -15,6 +15,7 @@ import { TicketsService } from 'src/tickets/tickets.service';
 import { adjustSessionDate, isSessionActive } from 'src/utils/date';
 import { TimeSlot } from 'src/sessions/enum/time-slot';
 import { WatchHistoryEntity } from './entity/watch-history.entity';
+import { WatchedHistoryPayload } from './payload/watched-history-payload';
 
 @Injectable()
 export class MoviesService {
@@ -100,8 +101,11 @@ export class MoviesService {
       );
     }
 
-    /*  const { date, timeSlot } = ticket.session;
+    /*  
+    Below code is just working fine. However, it restricts watching movies due to the exact time slot check.
+    So, for test purposes, maybe its better to not use it.
     
+    const { date, timeSlot } = ticket.session;
     if (!isSessionActive(new Date(date), timeSlot as TimeSlot)) {
       throw new BadRequestException(
         `Please wait until the session is active. Date:${date}, Time:${timeSlot}`,
@@ -127,10 +131,16 @@ export class MoviesService {
     return { message: 'You have successfully watched the movie' };
   }
 
-  async viewWatchHistory(userId: string) {
+  async viewWatchHistory(userId: string): Promise<WatchedHistoryPayload[]> {
     const watchHistory = await this.watchHistoryRepository.find({
       where: { user_id: userId },
+      relations: { movie: true },
     });
-    return watchHistory.map((entry) => entry);
+    return watchHistory.map((entry) => {
+      return {
+        watchedAt: entry.createdAt,
+        movie: entry.movie,
+      } as WatchedHistoryPayload;
+    });
   }
 }
