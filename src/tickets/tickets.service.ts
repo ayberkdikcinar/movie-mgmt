@@ -1,38 +1,42 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SessionEntity } from 'src/sessions/entity/sessions.entity';
 import { Repository } from 'typeorm';
 import { TicketEntity } from './entity/tickets.entity';
 import { generateUUID } from 'src/utils/gen-id';
-import { UserEntity } from 'src/users/entity/user.entity';
-import { UsersService } from 'src/users/users.service';
-import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
-import { parseTimeSlot } from 'src/utils/parse-timeslot';
+import { adjustSessionDate, isDateInTheFuture } from 'src/utils/date';
 import { TimeSlot } from 'src/sessions/enum/time-slot';
+import { SessionsService } from 'src/sessions/sessions.service';
 
 @Injectable()
 export class TicketsService {
   constructor(
     @InjectRepository(TicketEntity)
     private readonly ticketRepository: Repository<TicketEntity>,
-
-    @InjectRepository(SessionEntity)
-    private sessionsRepository: Repository<SessionEntity>,
-    private usersService: UsersService,
+    private sessionsService: SessionsService,
   ) {}
 
   async purchaseTicket(
-    user: any,
+    user_id: string,
     ticket: CreateTicketDto,
   ): Promise<TicketEntity> {
     const { sessionId } = ticket;
 
-    const session = await this.sessionsRepository.findOneBy({ id: sessionId });
+    const session = await this.sessionsService.getSessionById(sessionId);
 
     if (!session) {
       throw new BadRequestException(
-        'Session that you are trying buy a ticket for is not exists.',
+        'Session that you are trying to purchase a ticket is not exists.',
+      );
+    }
+
+    if (
+      !isDateInTheFuture(
+        adjustSessionDate(new Date(session.date), session.timeSlot as TimeSlot),
+      )
+    ) {
+      throw new BadRequestException(
+        'Session that you are trying to purchase a ticket is expired.',
       );
     }
 
@@ -41,13 +45,13 @@ export class TicketsService {
       createdAt: new Date(),
       updatedAt: new Date(),
       session,
-      user_id: user.id,
+      user_id,
     });
 
     return await this.ticketRepository.save(ticketObj);
   }
 
-  async getPurchasedTickets(user: JWTUserPayload) {
+  async getPurchasedTickets(user_id: string) {
     return await this.ticketRepository.find({
       select: {
         id: true,
@@ -68,41 +72,92 @@ export class TicketsService {
           movie: true,
         },
       },
-      where: { user_id: user.id },
+      where: { user_id: user_id },
     });
   }
 
-  async viewWatchHistory() {
+  async useTicket(id: string): Promise<boolean> {
+    const result = await this.ticketRepository.update(
+      { id: id },
+      { isUsed: true, updatedAt: new Date() },
+    );
+
+    if (!result.affected) {
+      throw new BadRequestException('Ticket could not be updated');
+    }
+
+    return true;
+  }
+
+  async findValidTicketByMovie(
+    user_id: string,
+    movie_id: string,
+  ): Promise<TicketEntity | null> {
+    const tickets = await this.ticketRepository.find({
+      where: {
+        user_id,
+        isUsed: false,
+        session: {
+          movie: {
+            id: movie_id,
+          },
+        },
+      },
+      relations: {
+        session: {
+          movie: true,
+        },
+      },
+    });
+
+    if (!tickets.length) {
+      return null;
+    }
+
+    //any ticket that is valid? at least 1.
+    for (const ticket of tickets) {
+      const ticketIsValid = isDateInTheFuture(
+        adjustSessionDate(
+          new Date(ticket.session.date),
+          ticket.session.timeSlot as TimeSlot,
+          'start',
+        ),
+      );
+      if (ticketIsValid) {
+        return ticket;
+      }
+    }
     return null;
   }
 
-  async validateTicket(user_id: string, ticket_id: string): Promise<boolean> {
+  async isTicketValid(id: string): Promise<boolean> {
     const ticket = await this.ticketRepository.findOne({
       where: {
-        id: ticket_id,
-        user_id,
+        id: id,
       },
-      relations: { session: true },
+      relations: {
+        session: {
+          movie: true,
+        },
+      },
     });
 
     if (!ticket) {
       return false;
     }
 
-    const currentDate = new Date();
+    const ticketIsValid = isDateInTheFuture(
+      adjustSessionDate(
+        new Date(ticket.session.date),
+        ticket.session.timeSlot as TimeSlot,
+        'start',
+      ),
+    );
 
-    if (currentDate > new Date(ticket.session.date)) {
+    if (!ticketIsValid) {
       return false;
     }
 
-    //TODO: check the currentTime is passed or not. If it is not passed. it is valid.
-    //To watch movies, should the time match with the session timeslot?
-    //example msg: you can not watch this movie right now. it starts at 15:00.
-
-    const { end } = parseTimeSlot(ticket.session.timeSlot as TimeSlot);
-    if (currentDate.getHours() >= end) {
-      return false;
-    }
     return true;
   }
 }

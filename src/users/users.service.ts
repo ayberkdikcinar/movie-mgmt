@@ -22,6 +22,7 @@ export class UsersService {
     return await this.usersRepository.findOneBy({ id });
   }
 
+  //NOTE: for testing purposes.
   async findAll() {
     return await this.usersRepository.find({ relations: { tickets: true } });
   }

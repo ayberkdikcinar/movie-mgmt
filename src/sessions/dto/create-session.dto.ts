@@ -4,6 +4,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
+  Max,
   Min,
 } from 'class-validator';
 import { TimeSlot } from '../enum/time-slot';
@@ -25,5 +26,6 @@ export class CreateSessionDto {
 
   @IsInt()
   @Min(0)
+  @Max(15)
   roomNumber: number;
 }

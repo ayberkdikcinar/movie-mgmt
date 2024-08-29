@@ -14,19 +14,21 @@ export class TicketsController {
     @Body() createTicketDto: CreateTicketDto,
   ) {
     const user = req.user as JWTUserPayload;
-    return await this.ticketService.purchaseTicket(user, createTicketDto);
+    return await this.ticketService.purchaseTicket(user.id, createTicketDto);
   }
 
   @Get()
   async getTickets(@Req() req: Request) {
     const user = req.user as JWTUserPayload;
-
-    return await this.ticketService.getPurchasedTickets(user);
+    return await this.ticketService.getPurchasedTickets(user.id);
   }
 
-  @Get('validate/:movieId')
-  async validateTicket(@Req() req: Request, @Param('movieId') movieId: string) {
-    const user = req.user as JWTUserPayload;
-    return await this.ticketService.validateTicket(user.id, movieId);
+  @Get('validate/:ticketId')
+  async validateTicket(@Param('ticketId') ticketId: string) {
+    const validTicket = await this.ticketService.isTicketValid(ticketId);
+    if (!validTicket) {
+      return { valid: false };
+    }
+    return { valid: true };
   }
 }

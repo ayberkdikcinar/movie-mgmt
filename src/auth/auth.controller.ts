@@ -21,7 +21,8 @@ export class AuthController {
   async signin(@Body() signinUserDto: SigninUserDto) {
     return await this.authService.signin(signinUserDto);
   }
-  //FOR TESTING PURPOSES.
+
+  //NOTE: for testing purposes.
   @Public()
   @Get('users')
   async getUsers() {
@@ -31,7 +32,6 @@ export class AuthController {
   @Get('me')
   async getUser(@Req() req: Request) {
     const user = req.user as JWTUserPayload;
-    console.log('user:', user);
     return await this.authService.getUser(user.id);
   }
 }

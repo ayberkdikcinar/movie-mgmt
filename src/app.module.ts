@@ -13,6 +13,7 @@ import { SessionEntity } from './sessions/entity/sessions.entity';
 import { TicketEntity } from './tickets/entity/tickets.entity';
 import { SessionsModule } from './sessions/sessions.module';
 import { UsersModule } from './users/users.module';
+import { WatchHistoryEntity } from './movies/entity/watch-history.entity';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './users/users.module';
         MovieEntity,
         SessionEntity,
         TicketEntity,
+        WatchHistoryEntity,
       ]),
     ),
     AuthModule,

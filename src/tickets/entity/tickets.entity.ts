@@ -15,4 +15,7 @@ export class TicketEntity extends TypeORMBaseEntity {
   @ManyToOne(() => SessionEntity, (session) => session.tickets)
   @JoinColumn({ name: 'session_id' })
   session: SessionEntity;
+
+  @Column({ default: false, nullable: false })
+  isUsed: boolean;
 }
