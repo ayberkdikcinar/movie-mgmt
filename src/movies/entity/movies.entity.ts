@@ -1,5 +1,5 @@
 import { SessionEntity } from 'src/sessions/entity/sessions.entity';
-import { TypeORMBaseEntity } from 'src/types/base.entity';
+import { TypeORMBaseEntity } from 'src/types/base/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('movies')

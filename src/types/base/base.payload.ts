@@ -1,15 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserPayload {
+export class BasePayload {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
-  username: string;
+  createdAt: Date;
 
   @ApiProperty()
-  role: string;
-
-  @ApiProperty()
-  age: number;
+  updatedAt: Date;
 }

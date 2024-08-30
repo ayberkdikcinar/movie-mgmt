@@ -1,6 +1,6 @@
 import { UserEntity } from 'src/users/entity/user.entity';
 import { SessionEntity } from 'src/sessions/entity/sessions.entity';
-import { TypeORMBaseEntity } from 'src/types/base.entity';
+import { TypeORMBaseEntity } from 'src/types/base/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('tickets')

@@ -1,4 +1,4 @@
-import { TypeORMBaseEntity } from 'src/types/base.entity';
+import { TypeORMBaseEntity } from 'src/types/base/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { MovieEntity } from './movies.entity';
 import { UserEntity } from 'src/users/entity/user.entity';

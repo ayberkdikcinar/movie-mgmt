@@ -12,11 +12,10 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieErrorMessage } from './types/enums/movie-error-message';
 import { MovieQueryOptions } from './types/query/movie-query-options';
 import { TicketsService } from 'src/tickets/tickets.service';
-import { adjustSessionDate, isSessionActive } from 'src/utils/date';
-import { TimeSlot } from 'src/sessions/enum/time-slot';
 import { WatchHistoryEntity } from './entity/watch-history.entity';
-import { WatchedHistoryPayload } from './payload/watched-history-payload';
-
+import { DeleteMoviePayload } from './payload/delete-movie-payload';
+import { WatchMoviePayload } from './payload/watch-movie-payload';
+import { MoviePayload } from './payload/movie-payload';
 @Injectable()
 export class MoviesService {
   constructor(
@@ -27,7 +26,7 @@ export class MoviesService {
     private ticketsService: TicketsService,
   ) {}
 
-  async getMovies(queryOptions: MovieQueryOptions): Promise<MovieEntity[]> {
+  async getMovies(queryOptions: MovieQueryOptions): Promise<MoviePayload[]> {
     const { pageSize, sessions, skip } = queryOptions;
 
     return await this.moviesRepository.find({
@@ -39,11 +38,11 @@ export class MoviesService {
     });
   }
 
-  async getMovieById(id: string): Promise<MovieEntity> {
+  async getMovieById(id: string): Promise<MoviePayload> {
     return await this.moviesRepository.findOneBy({ id });
   }
 
-  async createMovie(movie: CreateMovieDto): Promise<MovieEntity> {
+  async createMovie(movie: CreateMovieDto): Promise<MoviePayload> {
     const { ageRestriction, name } = movie;
     const movieObj = this.moviesRepository.create({
       id: generateUUID(),
@@ -55,7 +54,7 @@ export class MoviesService {
     return await this.moviesRepository.save(movieObj);
   }
 
-  async updateMovie(movie: UpdateMovieDto): Promise<any> {
+  async updateMovie(movie: UpdateMovieDto): Promise<MoviePayload> {
     const { ageRestriction, name, id } = movie;
     const existingMovie = await this.moviesRepository.findOneBy({ id });
     if (!existingMovie) {
@@ -73,7 +72,7 @@ export class MoviesService {
     return { ...existingMovie, ...movie };
   }
 
-  async deleteMovie(id: string): Promise<{ id: string }> {
+  async deleteMovie(id: string): Promise<DeleteMoviePayload> {
     const movie = await this.moviesRepository.findOneBy({
       id,
     });
@@ -90,10 +89,13 @@ export class MoviesService {
     return { id };
   }
 
-  async watchMovie(user_id: string, movie_id: string) {
+  async watchMovie(
+    userId: string,
+    movieId: string,
+  ): Promise<WatchMoviePayload> {
     const ticket = await this.ticketsService.findValidTicketByMovie(
-      user_id,
-      movie_id,
+      userId,
+      movieId,
     );
     if (!ticket) {
       throw new BadRequestException(
@@ -120,8 +122,8 @@ export class MoviesService {
 
     const watchHistoryObj = this.watchHistoryRepository.create({
       id: generateUUID(),
-      movie_id,
-      user_id,
+      movie_id: movieId,
+      user_id: userId,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -129,18 +131,5 @@ export class MoviesService {
     await this.watchHistoryRepository.save(watchHistoryObj);
 
     return { message: 'You have successfully watched the movie' };
-  }
-
-  async viewWatchHistory(userId: string): Promise<WatchedHistoryPayload[]> {
-    const watchHistory = await this.watchHistoryRepository.find({
-      where: { user_id: userId },
-      relations: { movie: true },
-    });
-    return watchHistory.map((entry) => {
-      return {
-        watchedAt: entry.createdAt,
-        movie: entry.movie,
-      } as WatchedHistoryPayload;
-    });
   }
 }

@@ -1,6 +1,10 @@
-import { MovieEntity } from '../entity/movies.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { MoviePayload } from './movie-payload';
 
-export interface WatchedHistoryPayload {
+export class WatchedHistoryPayload {
+  @ApiProperty()
   watchedAt: Date;
-  movie: MovieEntity;
+
+  @ApiProperty()
+  movie: MoviePayload;
 }

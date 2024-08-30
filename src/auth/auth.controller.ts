@@ -13,23 +13,26 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserPayload } from 'src/users/payload/user-payload';
+import { SigninPayload } from './types/signin-payload';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiResponse({ status: 201, type: UserPayload })
   @Public()
   @Post('signup')
-  async signup(@Body() createUserDto: CreateUserDto) {
+  async signup(@Body() createUserDto: CreateUserDto): Promise<UserPayload> {
     return await this.authService.signup(createUserDto);
   }
 
   @ApiOperation({ summary: 'Sign in a user' })
-  @ApiResponse({ status: 200, description: 'returns access token!' })
+  @ApiResponse({ status: 200, type: SigninPayload })
   @ApiResponse({ status: 400, description: 'Check your credentials!' })
   @Public()
   @Post('signin')
-  async signin(@Body() signinUserDto: SigninUserDto) {
+  async signin(@Body() signinUserDto: SigninUserDto): Promise<SigninPayload> {
     return await this.authService.signin(signinUserDto);
   }
 
@@ -41,9 +44,9 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: 200, description: 'returns the signed in user' })
+  @ApiResponse({ status: 200, type: UserPayload })
   @Get('me')
-  async getUser(@Req() req: Request) {
+  async getUser(@Req() req: Request): Promise<UserPayload> {
     const user = req.user as JWTUserPayload;
     return await this.authService.getUser(user.id);
   }

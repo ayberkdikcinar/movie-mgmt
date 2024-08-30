@@ -6,12 +6,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { generateUUID } from 'src/utils/gen-id';
 import { UserPayload } from './payload/user-payload';
 import * as bcrypt from 'bcrypt';
+import { WatchHistoryEntity } from 'src/movies/entity/watch-history.entity';
+import { WatchedHistoryPayload } from 'src/movies/payload/watched-history-payload';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
+    @InjectRepository(WatchHistoryEntity)
+    private watchHistoryRepository: Repository<WatchHistoryEntity>,
   ) {}
 
   async findOneByUsername(username: string) {
@@ -50,6 +54,20 @@ export class UsersService {
       age: newUser.age,
     };
     return userPayload;
+  }
+
+  async viewWatchHistory(userId: string): Promise<WatchedHistoryPayload[]> {
+    const watchHistory = await this.watchHistoryRepository.find({
+      where: { user_id: userId },
+      relations: { movie: true },
+    });
+
+    return watchHistory.map((entry) => {
+      return {
+        watchedAt: entry.createdAt,
+        movie: entry.movie,
+      } as WatchedHistoryPayload;
+    });
   }
 
   async hashPassword(password: string): Promise<string> {

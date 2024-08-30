@@ -3,6 +3,8 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { SigninUserDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserPayload } from 'src/users/payload/user-payload';
+import { SigninPayload } from './types/signin-payload';
 @Injectable()
 export class AuthService {
   constructor(
@@ -10,7 +12,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signin(signinUserDto: SigninUserDto): Promise<any> {
+  async signin(signinUserDto: SigninUserDto): Promise<SigninPayload> {
     const { username, password } = signinUserDto;
     const user = await this.usersService.findOneByUsername(username);
     if (!user) {
@@ -30,7 +32,7 @@ export class AuthService {
     };
   }
 
-  async signup(user: CreateUserDto) {
+  async signup(user: CreateUserDto): Promise<UserPayload> {
     const { username } = user;
     const existingUser = await this.usersService.findOneByUsername(username);
     if (existingUser) {
@@ -45,7 +47,7 @@ export class AuthService {
     return await this.usersService.findAll();
   }
 
-  async getUser(id: string) {
+  async getUser(id: string): Promise<UserPayload> {
     const user = await this.usersService.findOneById(id);
     if (!user) {
       return null;

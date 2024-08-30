@@ -1,5 +1,5 @@
 import { MovieEntity } from 'src/movies/entity/movies.entity';
-import { TypeORMBaseEntity } from 'src/types/base.entity';
+import { TypeORMBaseEntity } from 'src/types/base/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { TimeSlot } from '../enum/time-slot';
 import { TicketEntity } from 'src/tickets/entity/tickets.entity';

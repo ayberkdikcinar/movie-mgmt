@@ -11,6 +11,7 @@ import { generateUUID } from 'src/utils/gen-id';
 
 import { adjustSessionDate, isDateInTheFuture } from 'src/utils/date';
 import { MovieEntity } from 'src/movies/entity/movies.entity';
+import { SessionPayload } from './payload/session-payload';
 
 @Injectable()
 export class SessionsService {
@@ -21,7 +22,9 @@ export class SessionsService {
     private moviesRepository: Repository<MovieEntity>,
   ) {}
 
-  async createSession(createSessionDto: CreateSessionDto) {
+  async createSession(
+    createSessionDto: CreateSessionDto,
+  ): Promise<SessionPayload> {
     const { date, movieId, roomNumber, timeSlot } = createSessionDto;
 
     if (
@@ -53,10 +56,27 @@ export class SessionsService {
       movie,
     });
 
-    return await this.sessionsRepository.save(sessionObj);
+    const savedSession = await this.sessionsRepository.save(sessionObj);
+
+    const response: SessionPayload = {
+      id: savedSession.id,
+      createdAt: savedSession.createdAt,
+      updatedAt: savedSession.updatedAt,
+      date: savedSession.date,
+      roomNumber: savedSession.roomNumber,
+      timeSlot: savedSession.timeSlot,
+    };
+
+    return response;
   }
 
-  async getSessionById(id: string) {
+  async getSessionById(id: string): Promise<SessionPayload> {
     return await this.sessionsRepository.findOneBy({ id });
+  }
+
+  async getSessionsByMovieId(movieId: string): Promise<SessionPayload[]> {
+    return await this.sessionsRepository.find({
+      where: { movie: { id: movieId } },
+    });
   }
 }
