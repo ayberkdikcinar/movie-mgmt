@@ -4,8 +4,15 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
 import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { TicketPayload } from './payload/ticket-payload';
+import { Roles } from 'src/auth/constants/role-decorator';
+import { Role } from 'src/users/types/enum/role';
 @ApiTags('tickets')
 @ApiBearerAuth()
 @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -14,8 +21,10 @@ import { TicketPayload } from './payload/ticket-payload';
 export class TicketsController {
   constructor(private readonly ticketService: TicketsService) {}
 
+  @ApiOperation({ summary: 'Protected route for customers only' })
   @ApiResponse({ status: 201, type: TicketPayload })
   @Post('purchase')
+  @Roles(Role.customer)
   async purchaseTicket(
     @Req() req: Request,
     @Body() createTicketDto: CreateTicketDto,

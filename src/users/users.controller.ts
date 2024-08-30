@@ -1,10 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
 import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
 import { WatchedHistoryPayload } from 'src/movies/payload/watched-history-payload';
+import { Roles } from 'src/auth/constants/role-decorator';
+import { Role } from './types/enum/role';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -13,6 +20,7 @@ import { WatchedHistoryPayload } from 'src/movies/payload/watched-history-payloa
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @ApiOperation({ summary: 'Protected route for customers only' })
   @ApiResponse({
     status: 200,
     description: 'Returns a list of movies watched by the signed in user.',
@@ -20,6 +28,7 @@ export class UsersController {
     isArray: true,
   })
   @Get('watch-history')
+  @Roles(Role.customer)
   async viewWatchHistory(
     @Req() req: Request,
   ): Promise<WatchedHistoryPayload[]> {

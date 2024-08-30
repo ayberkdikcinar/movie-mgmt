@@ -34,7 +34,13 @@ import { MoviePayload } from './payload/movie-payload';
 export class MoviesController {
   constructor(private readonly movieService: MoviesService) {}
 
-  @ApiResponse({ status: 200, type: MoviePayload, isArray: true })
+  @ApiResponse({
+    status: 200,
+    type: MoviePayload,
+    isArray: true,
+    description:
+      'Returns Movie list. If sessions=1 returns sessions:[] for each movie',
+  })
   @Get()
   async getMovies(
     @Query() movieQueryOptions: MovieQueryOptions,
@@ -78,9 +84,11 @@ export class MoviesController {
     return await this.movieService.deleteMovie(id);
   }
 
+  @ApiOperation({ summary: 'Protected route for customers only' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 200, type: WatchMoviePayload })
   @Get(':movieId/watch')
+  @Roles(Role.customer)
   async watchMovie(
     @Req() req: Request,
     @Param('movieId') movieId: string,
