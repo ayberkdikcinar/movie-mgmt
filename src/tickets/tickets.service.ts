@@ -3,10 +3,10 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TicketEntity } from './entity/tickets.entity';
-import { generateUUID } from 'src/utils/gen-id';
-import { adjustSessionDate, isDateInTheFuture } from 'src/utils/date';
-import { TimeSlot } from 'src/sessions/enum/time-slot';
-import { SessionsService } from 'src/sessions/sessions.service';
+import { generateUUID } from '../utils/gen-id';
+import { adjustSessionDate, isDateInTheFuture } from '../utils/date';
+import { TimeSlot } from '../sessions/enum/time-slot';
+import { SessionsService } from '../sessions/sessions.service';
 
 @Injectable()
 export class TicketsService {
@@ -49,31 +49,6 @@ export class TicketsService {
     });
 
     return await this.ticketRepository.save(ticketObj);
-  }
-
-  async getPurchasedTickets(user_id: string) {
-    return await this.ticketRepository.find({
-      select: {
-        id: true,
-        session: {
-          id: true,
-          date: true,
-          timeSlot: true,
-          roomNumber: true,
-          movie: {
-            id: true,
-            name: true,
-            ageRestriction: true,
-          },
-        },
-      },
-      relations: {
-        session: {
-          movie: true,
-        },
-      },
-      where: { user_id: user_id },
-    });
   }
 
   async useTicket(id: string): Promise<boolean> {

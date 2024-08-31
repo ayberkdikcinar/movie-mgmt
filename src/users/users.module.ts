@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserEntity } from './entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WatchHistoryEntity } from 'src/movies/entity/watch-history.entity';
+import { WatchHistoryEntity } from '../movies/entity/watch-history.entity';
 import { UsersController } from './users.controller';
 
 @Module({

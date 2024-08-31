@@ -1,4 +1,4 @@
-import { TimeSlot } from 'src/sessions/enum/time-slot';
+import { TimeSlot } from '../sessions/enum/time-slot';
 
 export type HourSlot = {
   start: number;
@@ -7,7 +7,7 @@ export type HourSlot = {
 
 export type SessionPhase = 'start' | 'end';
 
-function parseTimeSlot(timeSlot: TimeSlot): HourSlot {
+export function parseTimeSlot(timeSlot: TimeSlot): HourSlot {
   const [startsAt, endsAt] = timeSlot.split('-');
   const [startsAtHour] = startsAt.split(':').map(Number);
   const [endsAtHour] = endsAt.split(':').map(Number);
@@ -23,10 +23,10 @@ export function isDateInTheFuture(date: Date): boolean {
 }
 
 export function isSessionActive(date: Date, timeSlot: TimeSlot): boolean {
-  const currentTime = new Date();
+  const currentTimeUTC = new Date(new Date().toISOString());
   const sessionStarts = adjustSessionDate(date, timeSlot, 'start');
   const sessionEnds = adjustSessionDate(date, timeSlot, 'end');
-  return currentTime >= sessionStarts && currentTime <= sessionEnds;
+  return currentTimeUTC >= sessionStarts && currentTimeUTC < sessionEnds;
 }
 
 export function adjustSessionDate(
@@ -34,13 +34,15 @@ export function adjustSessionDate(
   timeSlot: TimeSlot,
   phase: SessionPhase = 'start',
 ): Date {
-  const sessionDate = date;
+  const sessionDateUTC = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+  );
   const parsedSessionHours = parseTimeSlot(timeSlot);
   if (phase === 'start') {
-    sessionDate.setHours(parsedSessionHours.start);
+    sessionDateUTC.setUTCHours(parsedSessionHours.start);
   } else {
-    sessionDate.setHours(parsedSessionHours.end);
+    sessionDateUTC.setUTCHours(parsedSessionHours.end);
   }
 
-  return sessionDate;
+  return sessionDateUTC;
 }

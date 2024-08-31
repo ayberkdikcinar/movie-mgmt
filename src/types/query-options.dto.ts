@@ -13,7 +13,7 @@ export class QueryOptionsDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  readonly page: number;
+  readonly page: number = 1;
 
   @ApiPropertyOptional({
     minimum: 1,
@@ -25,7 +25,7 @@ export class QueryOptionsDto {
   @IsInt()
   @Min(1)
   @Max(500)
-  readonly pageSize: number;
+  readonly pageSize: number = DEFAULT_PAGE_SIZE;
 
   @ApiPropertyOptional()
   @IsOptional()

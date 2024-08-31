@@ -12,11 +12,11 @@ import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieQueryOptions } from './types/query/movie-query-options';
-import { Roles } from 'src/auth/constants/role-decorator';
-import { Role } from 'src/users/types/enum/role';
+import { Roles } from '../auth/constants/role-decorator';
+import { Role } from '../users/types/enum/role';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
-import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
+import { JWTUserPayload } from '../auth/types/jwt-user-payload';
 import {
   ApiBearerAuth,
   ApiOperation,

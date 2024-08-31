@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { SigninUserDto } from './dto/signin.dto';
 import { Public } from './constants/public';
 import { Request } from 'express';
@@ -8,12 +8,11 @@ import { Req } from '@nestjs/common';
 import { JWTUserPayload } from './types/jwt-user-payload';
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserPayload } from 'src/users/payload/user-payload';
+import { UserPayload } from '../users/payload/user-payload';
 import { SigninPayload } from './types/signin-payload';
 @ApiTags('auth')
 @Controller('auth')

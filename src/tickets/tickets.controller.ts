@@ -3,7 +3,7 @@ import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { Request } from 'express';
 import { Req } from '@nestjs/common';
-import { JWTUserPayload } from 'src/auth/types/jwt-user-payload';
+import { JWTUserPayload } from '../auth/types/jwt-user-payload';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -11,8 +11,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TicketPayload } from './payload/ticket-payload';
-import { Roles } from 'src/auth/constants/role-decorator';
-import { Role } from 'src/users/types/enum/role';
+import { Roles } from '../auth/constants/role-decorator';
+import { Role } from '../users/types/enum/role';
 @ApiTags('tickets')
 @ApiBearerAuth()
 @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -31,12 +31,6 @@ export class TicketsController {
   ) {
     const user = req.user as JWTUserPayload;
     return await this.ticketService.purchaseTicket(user.id, createTicketDto);
-  }
-
-  @Get()
-  async getTickets(@Req() req: Request) {
-    const user = req.user as JWTUserPayload;
-    return await this.ticketService.getPurchasedTickets(user.id);
   }
 
   @Get('validate/:ticketId')

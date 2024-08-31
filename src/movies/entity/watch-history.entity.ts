@@ -1,7 +1,7 @@
-import { TypeORMBaseEntity } from 'src/types/base/base.entity';
+import { TypeORMBaseEntity } from '../../types/base/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { MovieEntity } from './movies.entity';
-import { UserEntity } from 'src/users/entity/user.entity';
+import { UserEntity } from '../../users/entity/user.entity';
 
 @Entity('watch_history')
 export class WatchHistoryEntity extends TypeORMBaseEntity {

@@ -1,7 +1,7 @@
-import { QueryOptionsDto } from 'src/types/query-options.dto';
+import { QueryOptionsDto } from '../../../types/query-options.dto';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MovieQueryOptions extends QueryOptionsDto {
   @ApiPropertyOptional({

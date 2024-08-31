@@ -3,11 +3,12 @@ import { UserEntity } from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { generateUUID } from 'src/utils/gen-id';
+import { generateUUID } from '../utils/gen-id';
 import { UserPayload } from './payload/user-payload';
 import * as bcrypt from 'bcrypt';
-import { WatchHistoryEntity } from 'src/movies/entity/watch-history.entity';
-import { WatchedHistoryPayload } from 'src/movies/payload/watched-history-payload';
+import { WatchHistoryEntity } from '../movies/entity/watch-history.entity';
+import { WatchedHistoryPayload } from '../movies/payload/watched-history-payload';
+import { TicketEntity } from '@src/tickets/entity/tickets.entity';
 
 @Injectable()
 export class UsersService {
@@ -68,6 +69,38 @@ export class UsersService {
         movie: entry.movie,
       } as WatchedHistoryPayload;
     });
+  }
+
+  async getPurchasedTickets(user_id: string): Promise<TicketEntity[]> {
+    const userWithTicketDetails = await this.usersRepository.findOne({
+      select: {
+        tickets: {
+          id: true,
+          isUsed: true,
+          session: {
+            id: true,
+            date: true,
+            roomNumber: true,
+            timeSlot: true,
+            movie: {
+              id: true,
+              name: true,
+              ageRestriction: true,
+            },
+          },
+        },
+      },
+      relations: {
+        tickets: {
+          session: {
+            movie: true,
+          },
+        },
+      },
+      where: { id: user_id },
+    });
+
+    return userWithTicketDetails.tickets;
   }
 
   async hashPassword(password: string): Promise<string> {

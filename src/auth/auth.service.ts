@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
 import { SigninUserDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
-import { UserPayload } from 'src/users/payload/user-payload';
+import { UserPayload } from '../users/payload/user-payload';
 import { SigninPayload } from './types/signin-payload';
 @Injectable()
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
     const { username, password } = signinUserDto;
     const user = await this.usersService.findOneByUsername(username);
     if (!user) {
-      throw new BadRequestException('Check your credentails!');
+      throw new BadRequestException('Check your credentials!');
     }
     const isPasswordMatches = await this.usersService.comparePassword(
       password,
@@ -24,7 +24,7 @@ export class AuthService {
     );
 
     if (!isPasswordMatches) {
-      throw new BadRequestException('Check your credentails!');
+      throw new BadRequestException('Check your credentials!');
     }
     const payload = { sub: user.id, username: user.username, role: user.role };
     return {

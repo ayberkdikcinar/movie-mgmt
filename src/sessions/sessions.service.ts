@@ -7,10 +7,10 @@ import { SessionEntity } from './entity/sessions.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { generateUUID } from 'src/utils/gen-id';
+import { generateUUID } from '../utils/gen-id';
 
-import { adjustSessionDate, isDateInTheFuture } from 'src/utils/date';
-import { MovieEntity } from 'src/movies/entity/movies.entity';
+import { adjustSessionDate, isDateInTheFuture } from '../utils/date';
+import { MovieEntity } from '../movies/entity/movies.entity';
 import { SessionPayload } from './payload/session-payload';
 
 @Injectable()

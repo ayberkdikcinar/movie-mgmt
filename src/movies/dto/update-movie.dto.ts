@@ -16,7 +16,7 @@ export class UpdateMovieDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiPropertyOptional({
     minimum: 7,
@@ -26,5 +26,5 @@ export class UpdateMovieDto {
   @IsInt()
   @Min(7)
   @Max(18)
-  ageRestriction: number;
+  ageRestriction?: number;
 }

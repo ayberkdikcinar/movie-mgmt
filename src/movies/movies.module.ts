@@ -3,7 +3,7 @@ import { MoviesController } from './movies.controller';
 import { MoviesService } from './movies.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MovieEntity } from './entity/movies.entity';
-import { TicketsModule } from 'src/tickets/tickets.module';
+import { TicketsModule } from '../tickets/tickets.module';
 import { WatchHistoryEntity } from './entity/watch-history.entity';
 
 @Module({

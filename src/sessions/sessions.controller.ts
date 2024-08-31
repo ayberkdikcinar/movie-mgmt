@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { Roles } from 'src/auth/constants/role-decorator';
-import { Role } from 'src/users/types/enum/role';
+import { Roles } from '../auth/constants/role-decorator';
+import { Role } from '../users/types/enum/role';
 import {
   ApiBearerAuth,
   ApiOperation,

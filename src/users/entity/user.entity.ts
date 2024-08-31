@@ -1,7 +1,6 @@
-import { TicketEntity } from 'src/tickets/entity/tickets.entity';
-import { TypeORMBaseEntity } from 'src/types/base/base.entity';
+import { TicketEntity } from '../../tickets/entity/tickets.entity';
+import { TypeORMBaseEntity } from '../../types/base/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../types/enum/role';
 
 @Entity('users')

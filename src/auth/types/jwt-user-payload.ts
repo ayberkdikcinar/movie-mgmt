@@ -1,4 +1,4 @@
-import { Role } from 'src/users/types/enum/role';
+import { Role } from '../../users/types/enum/role';
 
 export interface JWTUserPayload {
   id: string;

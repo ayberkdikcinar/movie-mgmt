@@ -3,7 +3,7 @@ import { TicketsController } from './tickets.controller';
 import { TicketsService } from './tickets.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TicketEntity } from './entity/tickets.entity';
-import { SessionsModule } from 'src/sessions/sessions.module';
+import { SessionsModule } from '../sessions/sessions.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TicketEntity]), SessionsModule],
