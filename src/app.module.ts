@@ -18,7 +18,9 @@ import { WatchHistoryEntity } from './movies/entity/watch-history.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env`,
+      envFilePath: `${
+        process.env.NODE_ENV === 'test' ? 'dev' : process.env.NODE_ENV
+      }.env`,
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(
