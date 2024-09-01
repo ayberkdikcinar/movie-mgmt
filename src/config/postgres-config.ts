@@ -4,7 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 export function initPostgresConfig(
   entities: EntityClassOrSchema[],
 ): TypeOrmModuleOptions {
-  return {
+  const conf: TypeOrmModuleOptions = {
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),
@@ -16,5 +16,11 @@ export function initPostgresConfig(
         : process.env.POSTGRES_DATABASE,
     entities: entities,
     synchronize: true,
+    ssl:
+      process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : false,
   };
+
+  return conf;
 }
