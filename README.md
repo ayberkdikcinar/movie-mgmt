@@ -82,7 +82,7 @@ The API for the Movie Management System is structured following RESTful principl
 
 ### User Management:
 
-Users can register and log in with a username, password, and age. Roles (manager or customer) are assigned directly during signup for easy testing, although this is not recommended for production.
+Users can register with role and log in with a username, password. Roles (manager or customer) are assigned manually in the body during signup for easy testing, although this is not recommended for production.
 
 ### Movie Management:
 
@@ -92,6 +92,10 @@ Managers can add, modify, and delete movies. Each movie has a name, age restrict
 
 Customers can buy tickets for specific movie sessions and watch movies for which they have a valid ticket.
 Watch History: Customers can view a list of movies they've watched.
+
+### Session Management:
+
+Managers can create movie sessions, and the users can list the sessions for a movie.
 
 ### Movie Listing with Query Options
 
@@ -117,7 +121,7 @@ Originally, a validation check was implemented to ensure that the current time m
 
 ### User Roles in Signup
 
-During the signup process, roles such as manager or customer are directly assigned for easy testing. While assigning a manager role during signup is convenient for testing, it is not a best practice in a real production environment.
+During the signup process, roles such as manager or customer can be assigned for easy testing. While assigning a manager role during signup is convenient for testing, it is not a best practice in a real production environment.
 
 ### Authentication
 
