@@ -42,11 +42,6 @@ export class AuthService {
     return await this.usersService.saveUser(user);
   }
 
-  //FOR TESTING PURPOSES
-  async getUsers() {
-    return await this.usersService.findAll();
-  }
-
   async getUser(id: string): Promise<UserPayload> {
     const user = await this.usersService.findOneById(id);
     if (!user) {
