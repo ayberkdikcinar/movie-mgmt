@@ -36,13 +36,6 @@ export class AuthController {
     return await this.authService.signin(signinUserDto);
   }
 
-  //NOTE: for testing purposes.
-  @Public()
-  @Get('users')
-  async getUsers() {
-    return await this.authService.getUsers();
-  }
-
   @ApiBearerAuth()
   @ApiResponse({ status: 200, type: UserPayload })
   @Get('me')
