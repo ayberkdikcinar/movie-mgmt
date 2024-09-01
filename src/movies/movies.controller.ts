@@ -48,6 +48,16 @@ export class MoviesController {
     return await this.movieService.getMovies(movieQueryOptions);
   }
 
+  @ApiResponse({
+    status: 200,
+    type: MoviePayload,
+    description: 'Returns a Movie with Id.',
+  })
+  @Get(':movieId')
+  async getMovie(@Param('movieId') movieId: string): Promise<MoviePayload> {
+    return await this.movieService.getMovieById(movieId);
+  }
+
   @ApiOperation({ summary: 'Protected route for managers only' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 403, description: 'Forbidden' })

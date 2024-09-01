@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { SigninUserDto } from './dto/signin.dto';
@@ -29,6 +29,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiResponse({ status: 200, type: SigninPayload })
   @ApiResponse({ status: 400, description: 'Check your credentials!' })
+  @HttpCode(200)
   @Public()
   @Post('signin')
   async signin(@Body() signinUserDto: SigninUserDto): Promise<SigninPayload> {

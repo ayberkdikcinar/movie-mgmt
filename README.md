@@ -9,7 +9,7 @@ This application is a NestJS project that uses a PostgreSQL database. Follow the
 
 ### Setup the PostgreSQL Database
 
-The database setup script is included in the repository under src/config/scripts/postgres-start.sh. This script will set up a new PostgreSQL instance, create the database.
+The database setup script is included in the repository under src/config/scripts/postgres-start.sh. This script will set up a new PostgreSQL instance, create the database and test_database.
 
 Ensure the script has execution permissions:
 
@@ -31,6 +31,7 @@ POSTGRES_PORT=5432
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD='your-password-from-script'
 POSTGRES_DATABASE=movies_mgmt_db
+POSTGRES_DATABASE_TEST=movies_mgmt_test_db
 ```
 
 pgAdmin is available at **http://localhost:80** with the following default credentials:
